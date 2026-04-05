@@ -1,52 +1,46 @@
-name: Complete Android Build
+name: Flutter Android Build
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
-    runs-on: macos-latest  # Use macOS for Android builds with native code
+    runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'zulu'
+        
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.27.0'
         
-    - name: Setup Java
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'zulu'
-        
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      
-    - name: Grant execute permissions
+    - name: Create local.properties
       run: |
-        chmod +x ./scripts/download-node.sh
-        chmod +x ./scripts/build-apk.sh
-        
-    - name: Download Node.js runtime
-      run: |
-        ./scripts/download-node.sh arm64 v22.14.0
-        ./scripts/download-node.sh arm v22.14.0
-        ./scripts/download-node.sh x86_64 v22.14.0
+        echo "flutter.sdk=$(which flutter | sed 's|/bin/flutter||')" > android/local.properties
         
     - name: Install dependencies
       run: flutter pub get
       
-    - name: Build APK
-      run: ./scripts/build-apk.sh --split
+    - name: Analyze code
+      run: flutter analyze
       
-    - name: Upload APK artifacts
+    - name: Build APK
+      run: flutter build apk --release
+      
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: openclaw-android-apk
-        path: |
-          build/app/outputs/flutter-apk/*-release.apk
-        retention-days: 7
+        name: app-release
+        path: build/app/outputs/flutter-apk/app-release.apk
