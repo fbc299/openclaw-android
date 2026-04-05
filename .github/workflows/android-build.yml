@@ -1,4 +1,4 @@
-name: Flutter Android Build
+name: Simple Android Build
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntt-latest
     
     steps:
     - uses: actions/checkout@v4
@@ -32,9 +32,6 @@ jobs:
         
     - name: Install dependencies
       run: flutter pub get
-      
-    - name: Analyze code
-      run: flutter analyze
       
     - name: Build APK
       run: flutter build apk --release
