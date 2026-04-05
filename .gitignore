@@ -1,0 +1,76 @@
+# Flutter / Dart
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ
+*.iws
+*.iml
+*.ipr
+
+# Flutter
+.dart_tool/
+.packages
+pubspec.lock
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Android
+*.apk
+*.ap_
+*.aab
+
+# Android Studio
+*.class
+*.jar
+*.iml
+*.hprof
+.idea/
+**/android/.gradle/
+**/android/.idea/
+**/android/local.properties
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!**/src/main/**/gen/
+
+# NDK
+**/obj/**
+**/lib/**
+**/.cxx/**
+
+# Keystores
+*.jks
+*.keystore
+
+# Node.js runtime (binary is large, download on build)
+assets/node/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Environment
+.env
+.env.local
+
+# Misc
+coverage/
+*.orig
