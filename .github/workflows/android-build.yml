@@ -1,4 +1,4 @@
-name: Flutter Build
+name: Complete Android Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest  # Use macOS for Android builds with native code
     
     steps:
     - uses: actions/checkout@v4
@@ -15,16 +15,38 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.27.0'  # Try a newer version
+        flutter-version: '3.27.0'
+        
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'zulu'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Grant execute permissions
+      run: |
+        chmod +x ./scripts/download-node.sh
+        chmod +x ./scripts/build-apk.sh
+        
+    - name: Download Node.js runtime
+      run: |
+        ./scripts/download-node.sh arm64 v22.14.0
+        ./scripts/download-node.sh arm v22.14.0
+        ./scripts/download-node.sh x86_64 v22.14.0
         
     - name: Install dependencies
       run: flutter pub get
       
     - name: Build APK
-      run: flutter build apk --release
+      run: ./scripts/build-apk.sh --split
       
-    - name: Upload APK
+    - name: Upload APK artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: app-release
-        path: build/app/outputs/flutter-apk/app-release.apk
+        name: openclaw-android-apk
+        path: |
+          build/app/outputs/flutter-apk/*-release.apk
+        retention-days: 7
