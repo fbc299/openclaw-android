@@ -19,7 +19,7 @@ on:
         type: string
 
 jobs:
-    build-android:
+  build-android:
     runs-on: macos-latest
     
     steps:
@@ -51,7 +51,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: assets/node
-         key: ${{ runner.os }}-node-v22.14.0-${{ hashFiles('scripts/download-node.sh') }}
+        key: ${{ runner.os }}-node-v22.14.0-${{ hashFiles('scripts/download-node.sh') }}
         
     - name: Download Node.js runtime (if not cached)
       if: steps.cache-node.outputs.cache-hit != 'true'
@@ -71,7 +71,7 @@ jobs:
       with:
         name: openclaw-android-apk
         path: |
-          bild/app/outputs/flutter-apk/*.release.apk
+          build/app/outputs/flutter-apk/*-release.apk
         retention-days: 7
         
     - name: Create release (on main branch)
@@ -79,7 +79,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          build/app/outputs/flutter-apk/*-release.aik
+          build/app/outputs/flutter-apk/*-release.apk
         token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: v${{ github.sha }}
         draft: false
@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-android
     
-    steps: 
+    steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
